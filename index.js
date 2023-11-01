@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 // middlewre
 app.use(cors({
     origin: [
-        'http://localhost:5173',
+        // 'http://localhost:5173',
         'https://car-doctor-jwt-bb3a5.web.app',
         'https://car-doctor-jwt-bb3a5.firebaseapp.com'
     ],
