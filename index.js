@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 // middlewre
 app.use(cors({
     origin: [
-        // 'http://localhost:5173',
+        'http://localhost:5173',
         'https://car-doctor-jwt-bb3a5.web.app',
         'https://car-doctor-jwt-bb3a5.firebaseapp.com'
     ],
@@ -80,7 +80,17 @@ async function run() {
 
         // services
         app.get('/services', async (req, res) => {
-            const cursor = serviceCollection.find();
+            const filter = req.query;
+            console.log(filter);
+            const query = {
+                price: {$lt:100}
+            };
+            const options = {
+                sort: {
+                    price: filter.sort === 'asc' ? -1 : 1
+                }
+            }
+            const cursor = serviceCollection.find(query,options);
             const result = await cursor.toArray();
             res.send(result);
         })
@@ -140,6 +150,18 @@ async function run() {
             const result = await bookingCollection.deleteOne(query);
             res.send(result);
         })
+// existing user
+        // app.post('/user',verifyToken, async (req, res) => {
+        //     const user = req.body;
+        //     const existingUser = await userCollection.findOne({ email: user?.email });
+
+        //     if (existingUser) {
+        //         return res.status(200).json({ message: 'User already exists', user: existingUser });
+        //     } else {
+        //         const result = await userCollection.insertOne(user);
+        //         return res.status(201).json({ message: 'User registered successfully', user: result });
+        //     }
+        // });
 
         // Send a ping to confirm a successful connection
         // await client.db("admin").command({ ping: 1 });
